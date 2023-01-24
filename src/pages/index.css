@@ -1,0 +1,233 @@
+:root {
+    background: #1e1e1e;
+    scrollbar-color: #458245;
+    scrollbar-width: 5px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #5F5F5F;
+    border-radius: 5px;
+}
+
+.main {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 80px auto 0;
+    padding: 0;
+    min-width: 295px;
+    max-width: 768px;
+    background: #3D3D3D;
+}
+
+.content {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-height: 70vh;
+    list-style: none;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.list-item {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    /* background-image: url(./images/vertical_line.svg);
+    background-position: top left;
+    background-repeat: repeat-y; */
+}
+
+/* .list-item:last-of-type {
+    background-image: url(./images/horizontal_line.svg);
+    background-position: top left;
+    background-repeat : no-repeat;
+} */
+
+.item {
+    min-width: 200px;
+    height: 25px;
+    margin: 5px 5px 5px 20px;
+    padding: 5px 5px 5px 30px;
+    display: inline-block;
+    box-sizing: border-box;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.36;
+    color: #8D8D8D;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+}
+
+.item:focus {
+    background-color: rgba(106, 195, 255, 0.2);
+    border: none;
+    outline: none;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.caret {
+    position: absolute;
+    transform: translate(0, 50%);
+    left: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.caret::before {
+    margin: 0;
+    padding: 0;
+    content: url(../images/caret_icon.svg);
+    transform: rotate(-90deg);
+    color: black;
+    display: inline-block;
+}
+
+.caret-down::before {
+    transform: rotate(0deg);
+}
+
+.wrapper {
+    margin: 0;
+    display: none;
+    list-style: none;
+}
+
+.active {
+    display: block;
+}
+
+.button {
+    margin: 0;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn {
+    background-image: url(../images/add_icon.svg);
+}
+
+.delete-btn {
+    background-image: url(../images/delete_icon.svg);
+}
+
+.save-btn {
+    background-image: url(../images/save_icon.svg);
+}
+
+.buttons {
+    margin: 0;
+    padding: 5px 10px;
+    width: 100%;
+    min-height: 35px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search {
+    margin: 0;
+    padding: 10px 10px 10px 35px;
+    width: 100%;
+    height: 35px;
+    box-sizing: border-box;
+    background-image: url(../images/search_icon.svg);
+    background-size: 35px 35px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-color: inherit;
+    border: none;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.36;
+    color: #8D8D8D;
+}
+
+.search:focus {
+    outline: 1px solid white;
+}
+
+.add-item-popup {
+    min-width: 152px;
+    min-height: 72px;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    transform: translate(0, -100%);
+    background: #424242;
+}
+
+.popup_opened {
+    display: flex;
+}
+
+.add-item {
+    margin: 0;
+    padding: 5px 5px 5px 30px;
+    width: 100%;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    border: none;
+    background: transparent;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #8D8D8D;
+    cursor: pointer;
+}
+
+.add-item:hover {
+    border: 1px solid black;
+}
+
+.object-btn {
+    background-image: url(../images/icon_object.svg);
+    background-repeat: no-repeat;
+}
+
+.folder-btn {
+    background-image: url(../images/icon_folder2.svg);
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+}
+
+.file-btn {
+    background-image: url(../images/icon_file.svg);
+    background-repeat: no-repeat;
+}
+
+.item-file {
+  background-image: url(../images/icon_file.svg);
+}
+
+.item-folder {
+  background-image: url(../images/icon_folder.svg);
+}
+
+.item-object {
+  background-image: url(../images/icon_file.svg);
+}
