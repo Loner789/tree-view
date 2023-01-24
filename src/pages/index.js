@@ -1,30 +1,29 @@
 // Imports:
-import './index.css';
-import FolderElement from '../components/FolderElement.js';
-import FileElement from '../components/FileElement.js';
-import ObjectElement from '../components/ObjectElement.js';
-import MainElement from '../components/Main.js';
-import AddItemPopup from '../components/AddItemPopup.js';
+import "./index.css";
+import FolderElement from "../components/FolderElement.js";
+import FileElement from "../components/FileElement.js";
+import ObjectElement from "../components/ObjectElement.js";
+import MainElement from "../components/Main.js";
+import AddItemPopup from "../components/AddItemPopup.js";
 // import { testArr } from './utils/constants.js';
 
 // Connecting to the DOM
 class TreeView extends HTMLElement {
   connectedCallback() {
-    const element = document.querySelector('#treeview');
+    const element = document.querySelector("#treeview");
     const html = document.importNode(element.content, true);
     this.appendChild(html);
   }
 }
 
-customElements.define('treeview-webcomp', TreeView);
+customElements.define("treeview-webcomp", TreeView);
 
 // Variables:
 let targetItem;
-const deleteBtn = document.querySelector('.delete-btn');
-const addBtn = document.querySelector('.add-btn');
-const saveBtn = document.querySelector('.save-btn');
-const content = document.querySelector('.content');
-const searchInput = document.querySelector('.search');
+const deleteBtn = document.querySelector(".delete-btn");
+const saveBtn = document.querySelector(".save-btn");
+const content = document.querySelector(".content");
+const searchInput = document.querySelector(".search");
 
 // Functions:
 // Function to iterate DOM nodes and save information to array
@@ -34,24 +33,23 @@ function createArrayFromNodes(node, arr) {
     const items = element.childNodes;
 
     items.forEach((item) => {
-      if (item.className === 'item') {
+      if (item.className.includes("item")) {
         const newObject = {};
 
         newObject.label = item.innerText;
         newObject.icon_id = item.id;
-        if (item.localName === 'file-element') {
-          newObject.type = 'file';
-        } else if (item.localName === 'folder-element') {
-          newObject.type = 'folder';
-        } else if (item.localName === 'object-element') {
-          newObject.type = 'object';
+        if (item.localName === "file-element") {
+          newObject.type = "file";
+        } else if (item.localName === "folder-element") {
+          newObject.type = "folder";
+        } else if (item.localName === "object-element") {
+          newObject.type = "object";
         }
         newObject.children = [];
-
         arr.push(newObject);
         if (
           item.nextSibling &&
-          item.nextSibling.className.includes('wrapper')
+          item.nextSibling.className.includes("wrapper")
         ) {
           const element = item.nextSibling;
           createArrayFromNodes(element, newObject.children);
@@ -65,11 +63,11 @@ function saveItems() {
   const newArr = [];
 
   createArrayFromNodes(content, newArr);
-  localStorage.setItem('initialArray', JSON.stringify(newArr));
+  localStorage.setItem("initialArray", JSON.stringify(newArr));
 }
 
 function getItems() {
-  const arr = localStorage.getItem('initialArray');
+  const arr = localStorage.getItem("initialArray");
 
   if (!arr) return [];
 
@@ -77,19 +75,15 @@ function getItems() {
 }
 
 function deleteItem() {
-  const items = document.querySelectorAll('.item');
+  const items = document.querySelectorAll(".item");
 
   items.forEach((item) => {
     if (item.id === targetItem) {
-      const elementToDelete = item.closest('.list-item');
+      const elementToDelete = item.closest(".list-item");
 
       elementToDelete.remove();
     }
   });
-}
-
-function openAddItemPopup() {
-  popup.open();
 }
 
 // Common ID generator
@@ -101,26 +95,26 @@ function highlightSearchResult(data, array, count) {
   data.forEach((item) => {
     if (item.id === array[count].id) {
       item.focus();
-      const parent = item.closest('.list-item').parentNode;
+      const parent = item.closest(".list-item").parentNode;
 
       if (
-        parent.classList.contains('wrapper') &&
-        !parent.classList.contains('active')
+        parent.classList.contains("wrapper") &&
+        !parent.classList.contains("active")
       ) {
-        parent.classList.add('active');
+        parent.classList.add("active");
         item.focus();
         item.previousSibling &&
-          item.previousSibling.classList.contains('caret') &&
-          item.previousSibling.classList.add('caret-down');
+          item.previousSibling.classList.contains("caret") &&
+          item.previousSibling.classList.add("caret-down");
 
         item.parentNode.parentNode.parentNode.children[0].classList.contains(
-          'caret'
+          "caret"
         ) &&
           !item.parentNode.parentNode.parentNode.children[0].classList.contains(
-            'caret-down'
+            "caret-down"
           ) &&
           item.parentNode.parentNode.parentNode.children[0].classList.add(
-            'caret-down'
+            "caret-down"
           );
       }
     }
@@ -128,7 +122,7 @@ function highlightSearchResult(data, array, count) {
 }
 
 function handleSearch() {
-  const items = document.querySelectorAll('.item');
+  const items = document.querySelectorAll(".item");
   const itemsArr = Array.prototype.slice.call(items);
   const result = itemsArr.filter((item) => {
     return item.textContent
@@ -140,8 +134,8 @@ function handleSearch() {
 
   highlightSearchResult(items, result, counter);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
       if (counter < result.length - 1) {
         counter += 1;
         highlightSearchResult(items, result, counter);
@@ -155,13 +149,13 @@ const main = new MainElement(getItems(), generateId);
 main.renderTree();
 
 // Popup activate
-const popup = new AddItemPopup('.add-item-popup', generateId);
+const popup = new AddItemPopup(".add-item-popup", generateId, ".add-btn");
 popup.setEventListeners();
 
 // Event listeners:
 // Target element listener
-document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('item')) {
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("item")) {
     // save id of the target element to the variable
     targetItem = e.target.id;
     e.target.focus();
@@ -169,11 +163,9 @@ document.addEventListener('click', (e) => {
 });
 
 // Buttons listeners
-deleteBtn.addEventListener('click', deleteItem);
-addBtn.addEventListener('click', openAddItemPopup);
-saveBtn.addEventListener('click', saveItems);
-searchInput.addEventListener('search', handleSearch);
-
+deleteBtn.addEventListener("click", deleteItem);
+saveBtn.addEventListener("click", saveItems);
+searchInput.addEventListener("search", handleSearch);
 
 // Drag&drop logics
 const itemsListContainer = document.querySelector(`.content`);
