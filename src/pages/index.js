@@ -148,7 +148,7 @@ const main = new MainElement(getItems(), generateId);
 main.renderTree();
 
 // Popup activate
-const popup = new AddItemPopup(".add-item-popup", generateId, ".add-btn");
+const popup = new AddItemPopup(".add-item-popup", generateId, ".add-btn", dragAndDrop);
 popup.setEventListeners();
 
 // Event listeners:

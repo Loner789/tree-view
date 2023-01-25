@@ -1,6 +1,6 @@
 // Modal window class
 export default class AddItemPopup {
-  constructor(popupSelector, generateId, addButtonSelector) {
+  constructor(popupSelector, generateId, addButtonSelector, dragAndDrop) {
     this._popup = document.querySelector(popupSelector);
     this._handleEscClose = this._handleEscClose.bind(this);
     this._objectBtn = document.querySelector(".object-btn");
@@ -14,6 +14,7 @@ export default class AddItemPopup {
     this._togglePopup = this._togglePopup.bind(this);
     this._addButton = document.querySelector(addButtonSelector);
     this._opened = false;
+    this._dragAndDrop = dragAndDrop;
   }
 
   _handleEscClose(evt) {
@@ -47,6 +48,7 @@ export default class AddItemPopup {
     const fileElement = this._createItem("file-element", "New File");
 
     container.appendChild(fileElement);
+    this._dragAndDrop(".content", ".list-item", "item-file");
     this.close();
   }
 
@@ -100,7 +102,7 @@ export default class AddItemPopup {
     } catch (err) {
       console.log(err.message);
     }
-
+    this._dragAndDrop(".content", ".list-item", "item-file");
     this.close();
   }
 
