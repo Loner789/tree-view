@@ -45,7 +45,10 @@
 .list-item:last-child {
   background-image: url(../images/vertical_line.svg);
   background-repeat: no-repeat;
+}
 
+.content>.list-item:last-child {
+  background-image: none;
 }
 
 .content ul li::before {
