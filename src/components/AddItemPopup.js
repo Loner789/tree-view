@@ -52,51 +52,54 @@ export default class AddItemPopup {
 
   _addNotFileItem(type) {
     const items = document.querySelectorAll(".item");
+    try {
+      items.forEach((item) => {
+        if (!this._targetItem)
+          throw new Error(
+            "Необходимо выбрать файл или объект для размещения папки"
+          );
+        if (item.id === this._targetItem) {
+          const listItem = item.closest(".list-item");
+          const element =
+            type === "folder"
+              ? this._createItem("folder-element", "New Folder")
+              : this._createItem("object-element", "New Object");
 
-    items.forEach((item) => {
-      if (!this._targetItem)
-        throw new Error(
-          "Необходимо выбрать файл или объект для размещения папки"
-        );
-      if (item.id === this._targetItem) {
-        const listItem = item.closest(".list-item");
-        const element =
-          type === "folder"
-            ? this._createItem("folder-element", "New Folder")
-            : this._createItem("object-element", "New Object");
+          // Check if target item has nested nodes
+          if (listItem.children.length > 1) {
+            const innerUl = listItem.querySelector(".wrapper");
+            const innerCaret = listItem.querySelector(".caret");
+            innerUl.appendChild(element);
+            !innerUl.classList.contains("active") &&
+              innerUl.classList.add("active"),
+              innerCaret.classList.add("caret-down");
+          } else {
+            const caret = document.createElement("span");
+            caret.classList.add("caret");
+            caret.classList.add("caret-down");
 
-        // Check if target item has nested nodes
-        if (listItem.children.length > 1) {
-          const innerUl = listItem.querySelector(".wrapper");
-          const innerCaret = listItem.querySelector(".caret");
-          innerUl.appendChild(element);
-          !innerUl.classList.contains("active") &&
-            innerUl.classList.add("active"),
-            innerCaret.classList.add("caret-down");
-        } else {
-          const caret = document.createElement("span");
-          caret.classList.add("caret");
-          caret.classList.add("caret-down");
+            function toggleCaret() {
+              this.parentElement
+                .querySelector(".wrapper")
+                .classList.toggle("active");
+              this.classList.toggle("caret-down");
+            }
 
-          function toggleCaret() {
-            this.parentElement
-              .querySelector(".wrapper")
-              .classList.toggle("active");
-            this.classList.toggle("caret-down");
+            caret.addEventListener("click", toggleCaret);
+
+            const wrapper = document.createElement("ul");
+            wrapper.classList.add("wrapper");
+            wrapper.classList.add("active");
+            wrapper.appendChild(element);
+
+            listItem.prepend(caret);
+            listItem.append(wrapper);
           }
-
-          caret.addEventListener("click", toggleCaret);
-
-          const wrapper = document.createElement("ul");
-          wrapper.classList.add("wrapper");
-          wrapper.classList.add("active");
-          wrapper.appendChild(element);
-
-          listItem.prepend(caret);
-          listItem.append(wrapper);
         }
-      }
-    });
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
 
     this.close();
   }

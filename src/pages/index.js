@@ -5,7 +5,6 @@ import FileElement from "../components/FileElement.js";
 import ObjectElement from "../components/ObjectElement.js";
 import MainElement from "../components/Main.js";
 import AddItemPopup from "../components/AddItemPopup.js";
-// import { testArr } from './utils/constants.js';
 
 // Connecting to the DOM
 class TreeView extends HTMLElement {
@@ -168,93 +167,44 @@ saveBtn.addEventListener("click", saveItems);
 searchInput.addEventListener("search", handleSearch);
 
 // Drag&drop logics
-const itemsListContainer = document.querySelector(`.content`);
-const itemsElements = itemsListContainer.querySelectorAll(`.list-item`);
+function dragAndDrop(containerSelector, itemsSelector, elementSelector) {
+  const container = document.querySelector(containerSelector);
+  const items = container.querySelectorAll(itemsSelector);
 
-// Iterate through all the elements of the list and assign the desired value
-for (const task of itemsElements) {
-  task.draggable = true;
+  for (const item of items) {
+    item.childNodes.forEach((el) => {
+      if (el.classList.contains(elementSelector)) {
+        item.draggable = true;
+      }
+    });
+  }
+
+  container.addEventListener(`dragstart`, (evt) => {
+    evt.target.classList.add(`selected`);
+  });
+
+  container.addEventListener(`dragend`, (evt) => {
+    evt.target.classList.remove(`selected`);
+  });
+
+  container.addEventListener(`dragover`, (evt) => {
+    evt.preventDefault();
+
+    const activeElement = container.querySelector(`.selected`);
+    const currentElement = evt.target;
+    const isMoveable =
+      activeElement !== currentElement &&
+      currentElement.classList.contains(`list-item`);
+
+    if (!isMoveable) return;
+
+    const nextElement =
+      currentElement === activeElement.nextElementSibling
+        ? currentElement.nextElementSibling
+        : currentElement;
+
+    container.insertBefore(activeElement, nextElement);
+  });
 }
 
-itemsListContainer.addEventListener(`dragstart`, (evt) => {
-  evt.target.classList.add(`selected`);
-});
-
-itemsListContainer.addEventListener(`dragend`, (evt) => {
-  evt.target.classList.remove(`selected`);
-});
-
-itemsListContainer.addEventListener(`dragover`, (evt) => {
-  // Allow dropping elements into this area
-  evt.preventDefault();
-
-  // Finding the movable element
-  const activeElement = itemsListContainer.querySelector(`.selected`);
-  // Find the element over which the cursor is currently located
-  const currentElement = evt.target;
-  // Checking that the event was triggered:
-  // 1. not on the element that we are moving,
-  // 2. it is on the list item
-  const isMoveable =
-    activeElement !== currentElement &&
-    currentElement.classList.contains(`list-item`);
-
-  // If not, interrupt the execution of the function
-  if (!isMoveable) {
-    return;
-  }
-
-  // Find the element before which we will insert
-  const nextElement =
-    currentElement === activeElement.nextElementSibling
-      ? currentElement.nextElementSibling
-      : currentElement;
-
-  // Inserting activeElement before nextElement
-  itemsListContainer.insertBefore(activeElement, nextElement);
-});
-
-const getNextElement = (cursorPosition, currentElement) => {
-  // Get an object with sizes and coordinates
-  const currentElementCoord = currentElement.getBoundingClientRect();
-  // Find the vertical coordinate of the center of the current element
-  const currentElementCenter =
-    currentElementCoord.y + currentElementCoord.height / 2;
-
-  // If the cursor is above the center of the element, return the current element
-  // Else — next DOM-element
-  const nextElement =
-    cursorPosition < currentElementCenter
-      ? currentElement
-      : currentElement.nextElementSibling;
-
-  return nextElement;
-};
-
-itemsListContainer.addEventListener(`dragover`, (evt) => {
-  evt.preventDefault();
-
-  const activeElement = itemsListContainer.querySelector(`.selected`);
-  const currentElement = evt.target;
-  const isMoveable =
-    activeElement !== currentElement &&
-    currentElement.classList.contains(`list-item`);
-
-  if (!isMoveable) {
-    return;
-  }
-
-  // evt.clientY — the vertical coordinate of the cursor at the moment, when the event was triggered
-  const nextElement = getNextElement(evt.clientY, currentElement);
-
-  // Check whether the elements need to be swapped
-  if (
-    (nextElement && activeElement === nextElement.previousElementSibling) ||
-    activeElement === nextElement
-  ) {
-    // If not, exit the function to avoid unnecessary changes to the DOM
-    return;
-  }
-
-  itemsListContainer.insertBefore(activeElement, nextElement);
-});
+dragAndDrop(".content", ".list-item", "item-file");
